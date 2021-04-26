@@ -1,0 +1,3 @@
+# project requirements
+
+requests>=2.0
