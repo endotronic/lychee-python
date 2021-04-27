@@ -9,7 +9,7 @@ class Lychee:
 
         self.jar = requests.cookies.RequestsCookieJar()
 
-    def request(self, function, data=None):
+    def request(self, function, data=None, files=None):
         url = "{0}/api/{1}".format(self.api_url, function)
         data = dict({"function": function}, **(data or {}))
 
@@ -17,7 +17,9 @@ class Lychee:
         headers["Accept"] = "application/json"
         headers["Authorization"] = self.api_key
 
-        request = requests.post(url, headers=headers, cookies=self.jar, data=data)
+        request = requests.post(
+            url, headers=headers, cookies=self.jar, data=data, files=files
+        )
         if request.status_code != 200:
             raise Exception(
                 "Got status {} for function {}".format(request.status_code, function)
@@ -40,6 +42,25 @@ class Lychee:
     def get_albums(self):
         return self.request(function="Albums::get")
 
+    def get_album(self, album_id):
+        return self.request(function="Album::get", data={"albumID": album_id})
+
     def add_album(self, title, parent_id=0):
         data = dict(title=title, parent_id=parent_id)
         return self.request(function="Album::add", data=data)
+
+    def add_photo(self, album_id, photo_data):
+        data = {"albumID": album_id}
+        files = {"0": photo_data}
+        return self.request(function="Photo::add", data=data, files=files)
+
+    def get_photo(self, photo_id):
+        return self.request(function="Photo::get", data={"photoID": photo_id})
+
+    def set_photo_tags(self, photo_id, tags):
+        assert (
+            self.request(
+                function="Photo::setTags", data={"photoIDs": photo_id, "tags": tags}
+            )
+            == True
+        )
