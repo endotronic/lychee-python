@@ -64,3 +64,19 @@ class Lychee:
             )
             == True
         )
+
+    def set_photo_title(self, photo_id, title):
+        assert (
+            self.request(
+                function="Photo::setTitle", data={"photoIDs": photo_id, "title": title[:100]}
+            )
+            == True
+        )
+
+    def set_photo_description(self, photo_id, description):
+        assert (
+            self.request(
+                function="Photo::setDescription", data={"photoID": photo_id, "description": description}
+            )
+            == True
+        )
