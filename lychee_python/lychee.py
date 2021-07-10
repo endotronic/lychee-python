@@ -49,6 +49,15 @@ class Lychee:
         data = dict(title=title, parent_id=parent_id)
         return self.request(function="Album::add", data=data)
 
+    def set_album_description(self, album_id, description):
+        assert (
+            self.request(
+                function="Album::setDescription",
+                data={"albumID": album_id, "description": description[:1000]},
+            )
+            == True
+        )
+
     def add_photo(self, album_id, photo_data):
         data = {"albumID": album_id}
         files = {"0": photo_data}
@@ -68,7 +77,8 @@ class Lychee:
     def set_photo_title(self, photo_id, title):
         assert (
             self.request(
-                function="Photo::setTitle", data={"photoIDs": photo_id, "title": title[:100]}
+                function="Photo::setTitle",
+                data={"photoIDs": photo_id, "title": title[:100]},
             )
             == True
         )
@@ -76,7 +86,8 @@ class Lychee:
     def set_photo_description(self, photo_id, description):
         assert (
             self.request(
-                function="Photo::setDescription", data={"photoID": photo_id, "description": description}
+                function="Photo::setDescription",
+                data={"photoID": photo_id, "description": description},
             )
             == True
         )
